@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-    Client client;
+    GemTracker::Client client;
     std::cout << client.getDownloads("rails_admin", "0.0.0")
                        .at("totalDownloads") << std::endl;
     return 0;

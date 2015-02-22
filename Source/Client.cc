@@ -1,5 +1,7 @@
 #include "Client.h"
 
+namespace GemTracker {
+
 constexpr char Client::baseURL[];
 
 Client::Client() {
@@ -25,4 +27,6 @@ Client::getDownloads(const std::string& gemName,
         {"totalDownloads", root["total_downloads"].asInt()}
     };
 }
+
+} // namespace GemTracker
 

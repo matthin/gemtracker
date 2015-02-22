@@ -5,6 +5,8 @@
 #include <SFML/Network.hpp>
 #include "json/json.h"
 
+namespace GemTracker {
+
 class Client {
 public:
     Client();
@@ -26,4 +28,6 @@ private:
 
     static constexpr char baseURL[] = "http://rubygems.org/";
 };
+
+} // namespace GemTracker
 
