@@ -1,10 +1,10 @@
-#include "Client.h"
-#include <iostream>
+#include "Store.h"
+#include <vector>
 
 int main(int argc, char *argv[]) {
-    GemTracker::Client client;
-    std::cout << client.getDownloads(argv[1], argv[2])
-                       .at("totalDownloads") << std::endl;
+    GemTracker::Store store(std::vector<std::string> {
+        {argv[1]}
+    });
     return 0;
 }
 
