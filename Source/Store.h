@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+#include <SQLiteCpp/Database.h>
 #include "Client.h"
 
 namespace GemTracker {
@@ -13,6 +14,7 @@ public:
 private:
     const std::vector<std::string> gems;
     Client client;
+    SQLite::Database db;
     void saveDailies();
 };
 
