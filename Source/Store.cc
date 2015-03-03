@@ -16,6 +16,7 @@ Store::Store(const std::vector<std::string> gems)
     db.exec(
         "CREATE TABLE IF NOT EXISTS daily("
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
+        "gem INTEGER NOT NULL UNIQUE, "
         "downloads INTEGER NOT NULL, "
         "date DATE DEFAULT(date('now')) NOT NULL)"
     );
@@ -28,6 +29,22 @@ void Store::saveDailies() {
         // Save all gems which don't exist yet.
         // TODO - Batch into groups of 500 (SQLite's limit)
         db.exec("INSERT OR IGNORE INTO gem(name) VALUES('" + gem  + "')");
+
+        SQLite::Statement gemIDQuery(db, "SELECT id FROM gem WHERE name = ? LIMIT 1");
+        gemIDQuery.bind(1, gem);
+        gemIDQuery.executeStep();
+        const int gemID = gemIDQuery.getColumn(0);
+
+        const auto downloads =
+            client.getDownloads(gem, std::string("0.0.1"))
+                  .at("totalDownloads");
+        SQLite::Statement dailyQuery(
+            db,
+            "Insert OR IGNORE INTO daily(gem, downloads) VALUES(?, ?)"
+        );
+        dailyQuery.bind(1, gemID);
+        dailyQuery.bind(2, std::to_string(downloads));
+        dailyQuery.executeStep();
     }
 }
 
