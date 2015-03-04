@@ -8,12 +8,12 @@ Client::Client() {
     
 }
 
-std::unordered_map<std::string, unsigned int>
+Downloads
 Client::getDownloads(const char* gemName, const char* gemVersion) {
     return getDownloads(std::string(gemName), std::string(gemVersion));
 }
 
-std::unordered_map<std::string, unsigned int>
+Downloads
 Client::getDownloads(const std::string& gemName,
                      const std::string& gemVersion) {
     sf::Http http(baseURL);
@@ -22,10 +22,10 @@ Client::getDownloads(const std::string& gemName,
     );
     const auto response = http.sendRequest(request);
     const auto root = initRoot(response);
-    return std::unordered_map<std::string, unsigned int> {
-        {"versionDownloads", root["version_downloads"].asInt()},
-        {"totalDownloads", root["total_downloads"].asInt()}
-    };
+    return Downloads(
+        root["version_downloads"].asInt(),
+        root["total_downloads"].asInt()
+    );
 }
 
 } // namespace GemTracker

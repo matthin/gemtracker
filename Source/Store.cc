@@ -31,14 +31,16 @@ void Store::saveDailies() {
         // TODO - Batch into groups of 500 (SQLite's limit)
         db.exec("INSERT OR IGNORE INTO gem(name) VALUES('" + gem  + "')");
 
-        SQLite::Statement gemIDQuery(db, "SELECT id FROM gem WHERE name = ? LIMIT 1");
+        SQLite::Statement gemIDQuery(
+            db,
+            "SELECT id FROM gem WHERE name = ? LIMIT 1"
+        );
         gemIDQuery.bind(1, gem);
         gemIDQuery.executeStep();
         const int gemID = gemIDQuery.getColumn(0);
 
         const auto downloads =
-            client.getDownloads(gem, std::string("0.0.1"))
-                  .at("totalDownloads");
+            client.getDownloads(gem, std::string("0.0.1")).total;
         SQLite::Statement dailyQuery(
             db,
             "Insert OR IGNORE INTO daily(gem, downloads) VALUES(?, ?)"

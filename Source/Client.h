@@ -1,20 +1,26 @@
 #pragma once
 
 #include <string>
-#include <unordered_map>
 #include <SFML/Network.hpp>
 #include "json/json.h"
 
 namespace GemTracker {
 
+struct Downloads {
+    Downloads(const int version, const int total)
+            : version(version), total(total) {}
+    const int version;
+    const int total;
+};
+
 class Client {
 public:
     Client();
 
-    std::unordered_map<std::string, unsigned int> getDownloads(
+    Downloads getDownloads(
         const char* gemName, const char* gemVersion
     );
-    std::unordered_map<std::string, unsigned int> getDownloads(
+    Downloads getDownloads(
         const std::string& gemName, const std::string& gemVersion
     );
 
