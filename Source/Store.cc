@@ -16,9 +16,10 @@ Store::Store(const std::vector<std::string> gems)
     db.exec(
         "CREATE TABLE IF NOT EXISTS daily("
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-        "gem INTEGER NOT NULL UNIQUE, "
+        "gem INTEGER NOT NULL, "
         "downloads INTEGER NOT NULL, "
-        "date DATE DEFAULT(date('now')) NOT NULL)"
+        "date DATE DEFAULT(date('now')) NOT NULL, "
+        "CONSTRAINT uniq UNIQUE(gem, date))"
     );
 
     saveDailies();
