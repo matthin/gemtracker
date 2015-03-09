@@ -2,5 +2,8 @@
 
 namespace GemTracker {
 
+void GemController::show() {
 }
+
+} // namespace GemTracker
 
