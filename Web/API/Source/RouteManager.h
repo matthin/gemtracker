@@ -1,8 +1,9 @@
 #pragma once
 
 #include <SFML/Network.hpp>
+#include "Http/Request.h"
+#include <functional>
 #include <vector>
-#include "Controller.h"
 
 namespace GemTracker {
 
@@ -12,7 +13,18 @@ public:
 
 private:
     sf::TcpListener listener;
-    std::vector<Controller> controllers;
+
+    struct Route {
+        typedef std::function<void()> Handler;
+        Route(const std::string location, const Handler handler)
+                : location(location), handler(handler) {}
+        const std::string location;
+        const Handler handler;
+    };
+    const std::vector<Route> routes;
+
+    inline void routeRequest(const Http::Request& request) noexcept;
+    static inline std::vector<Route> initRoutes() noexcept;
 };
 
 } // namespace GemTracker

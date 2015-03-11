@@ -6,6 +6,7 @@ namespace GemTracker {
 
 class GemController : public Controller {
 public:        
+    static void index();
 };
 
 } // namespace GemTracker
