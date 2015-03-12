@@ -35,11 +35,6 @@ void RouteManager::routeRequest(sf::TcpSocket* client, const Http::Request& requ
             route.handler(request, response);
 
             response->headers["protocol"] = "HTTP/1.1";
-            response->headers["Content-Type"] = "text/plain";
-            response->headers["code"] = "200";
-            response->headers["codeMessage"] = "OK";
-            response->headers["Content-Length"] = '2';
-            response->message = "m8";
 
             auto responseString = response->asString();
             client->send(responseString.c_str(), responseString.size());
