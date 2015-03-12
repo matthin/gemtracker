@@ -4,7 +4,8 @@
 
 namespace GemTracker {
 
-void GemController::index() {
+void GemController::index(const Http::Request& request,
+                                Http::Response* response) {
     std::cout << "hit" << std::endl;
 }
 
