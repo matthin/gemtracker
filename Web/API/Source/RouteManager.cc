@@ -34,8 +34,6 @@ void RouteManager::routeRequest(sf::TcpSocket* client, const Http::Request& requ
             auto response = new Http::Response;
             route.handler(request, response);
 
-            response->headers["protocol"] = "HTTP/1.1";
-
             auto responseString = response->asString();
             client->send(responseString.c_str(), responseString.size());
             client->disconnect();

@@ -6,23 +6,14 @@ namespace GemTracker {
 namespace Http {
 
 std::string Response::asString() const noexcept {
-    std::string stringForm;
-    try {
-        stringForm.append(headers.at("protocol") + ' ')
-                  .append(headers.at("code") + ' ')
-                  .append(headers.at("codeMessage") + "\r\n");
-        for (const auto pair : headers) {
-            const auto key = pair.first;
-            const auto value = pair.second;
-            if (key != "protocol" && key != "code" && key != "codeMessage") {
-                stringForm.append(key + ": " + value + "\r\n");
-            }
-        }
-        if (!message.empty()) {
-            stringForm.append("\r\n" + message);
-        }
-    } catch (std::out_of_range e) {
-        std::cout << "Yes m8" << std::endl;
+    std::string stringForm(
+        protocol + ' ' + std::to_string(code) + ' ' + codeMessage + "\r\n"
+    );
+    for (const auto pair : headers) {
+        stringForm.append(pair.first + ": " + pair.second + "\r\n");
+    }
+    if (!message.empty()) {
+        stringForm.append("\r\n" + message);
     }
     return stringForm;
 }
