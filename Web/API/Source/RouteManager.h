@@ -27,7 +27,9 @@ private:
     };
     const std::vector<Route> routes;
 
-    inline void routeRequest(sf::TcpSocket* client, const Http::Request& request) noexcept;
+    inline void routeRequest(
+        sf::TcpSocket* client, const Http::Request& request
+    ) noexcept;
     static inline std::vector<Route> initRoutes() noexcept;
 };
 

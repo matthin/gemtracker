@@ -31,9 +31,11 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
     return Http::Request(message);
 }
 
-void RouteManager::routeRequest(sf::TcpSocket* client, const Http::Request& request) noexcept {
+void RouteManager::routeRequest(sf::TcpSocket* client,
+                                const Http::Request& request) noexcept {
     for (const Route route : routes) {
-        if (request.headers.at("location").find(route.location) != std::string::npos) {
+        if (request.headers.at("location").find(route.location)
+                != std::string::npos) {
             auto response = new Http::Response;
             route.handler(request, response);
 
