@@ -15,6 +15,8 @@ public:
 private:
     sf::TcpListener listener;
 
+    Http::Request getRequest(sf::TcpSocket* client);
+
     struct Route {
         typedef std::function<void(const Http::Request& request,
                                          Http::Response* response)> Handler;

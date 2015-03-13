@@ -11,21 +11,24 @@ RouteManager::RouteManager() : routes(initRoutes()) {
     while (true) {
         std::unique_ptr<sf::TcpSocket> client(new sf::TcpSocket);
         listener.accept(*client);
-
-        std::string message;
-        while (true) {
-            char buffer[1024];
-            std::size_t received;
-            client->receive(buffer, sizeof(buffer), received);
-            message.append(buffer, received);
-            if (received < sizeof(buffer)) {
-                break;
-            }
-        }
-        routeRequest(client.get(), Http::Request(message));
+        routeRequest(client.get(), getRequest(client.get()));
         // Only serve one request before cloesing, just for testing.
         break;
     }
+}
+
+Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
+    std::string message;
+    while (true) {
+        char buffer[1024];
+        std::size_t received;
+        client->receive(buffer, sizeof(buffer), received);
+        message.append(buffer, received);
+        if (received < sizeof(buffer)) {
+            break;
+        }
+    }
+    return Http::Request(message);
 }
 
 void RouteManager::routeRequest(sf::TcpSocket* client, const Http::Request& request) noexcept {
