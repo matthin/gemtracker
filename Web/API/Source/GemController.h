@@ -9,6 +9,7 @@ namespace GemTracker {
 class GemController : public Controller {
 public:        
     static void index(const Http::Request& request, Http::Response* response);
+    static void show(const Http::Request& request, Http::Response* response);
 };
 
 } // namespace GemTracker

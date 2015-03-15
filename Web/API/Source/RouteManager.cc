@@ -50,7 +50,8 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
 
 std::vector<RouteManager::Route> RouteManager::initRoutes() noexcept {
     return std::vector<Route> {{
-        {Route("/gems/index.json", GemController::index)}
+        {Route("/gems/index.json", GemController::index)},
+        {Route("/gem/show.json", GemController::show)}
     }};
 }
 
