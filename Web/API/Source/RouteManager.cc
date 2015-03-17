@@ -2,6 +2,7 @@
 
 #include <string>
 #include <memory>
+#include <regex>
 #include "GemController.h"
 
 namespace GemTracker {
@@ -34,8 +35,8 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
 void RouteManager::routeRequest(sf::TcpSocket* client,
                                 const Http::Request& request) noexcept {
     for (const Route route : routes) {
-        if (request.headers.at("location").find(route.location)
-                != std::string::npos) {
+        if (std::regex_search(request.headers.at("location"),
+                              std::regex(route.location))) {
             auto response = new Http::Response;
             route.handler(request, response);
 
@@ -50,8 +51,8 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
 
 std::vector<RouteManager::Route> RouteManager::initRoutes() noexcept {
     return std::vector<Route> {{
-        {Route("/gems/index.json", GemController::index)},
-        {Route("/gem/show.json", GemController::show)}
+        {Route("\\/gems\\/index.json", GemController::index)},
+        {Route("^\\/gem\\/[0-9]+\\/show.json$", GemController::show)}
     }};
 }
 
