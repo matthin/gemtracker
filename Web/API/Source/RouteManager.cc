@@ -1,5 +1,6 @@
 #include "RouteManager.h"
 
+#include <algorithm>
 #include <string>
 #include <memory>
 #include <regex>
@@ -34,18 +35,22 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
 
 void RouteManager::routeRequest(sf::TcpSocket* client,
                                 const Http::Request& request) noexcept {
-    for (const Route route : routes) {
-        if (std::regex_search(request.headers.at("location"),
-                              std::regex(route.location))) {
-            auto response = new Http::Response;
-            route.handler(request, response);
+    auto it = std::find_if(routes.begin(), routes.end(),
+                             [request](const Route& route) -> bool {
+        return std::regex_search(request.headers.at("location"),
+                                 std::regex(route.location));
+    });
+    if (it != routes.end()) {
+        auto route = *it;
+ 
+        auto response = new Http::Response;
+        route.handler(request, response);
 
-            auto responseString = response->asString();
-            client->send(responseString.c_str(), responseString.size());
-            client->disconnect();
+        auto responseString = response->asString();
+        client->send(responseString.c_str(), responseString.size());
+        client->disconnect();
 
-            delete response;
-        }
+        delete response;
     }
 }
 
