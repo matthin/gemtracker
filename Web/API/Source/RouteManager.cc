@@ -43,14 +43,12 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
     if (it != routes.end()) {
         auto route = *it;
  
-        auto response = new Http::Response;
-        route.handler(request, response);
+        std::unique_ptr<Http::Response> response(new Http::Response);
+        route.handler(request, response.get());
 
         auto responseString = response->asString();
         client->send(responseString.c_str(), responseString.size());
         client->disconnect();
-
-        delete response;
     }
 }
 
