@@ -4,6 +4,7 @@
 #include "Http/Response.h"
 #include "Http/Request.h"
 #include <functional>
+#include <regex>
 #include <vector>
 
 namespace GemTracker {
@@ -21,8 +22,8 @@ private:
         typedef std::function<void(const Http::Request& request,
                                          Http::Response* response)> Handler;
         Route(const std::string location, const Handler handler)
-                : location(location), handler(handler) {}
-        const std::string location;
+                : location(std::regex(location)), handler(handler) {}
+        const std::regex location;
         const Handler handler;
     };
     const std::vector<Route> routes;

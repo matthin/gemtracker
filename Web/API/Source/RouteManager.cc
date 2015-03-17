@@ -3,7 +3,6 @@
 #include <algorithm>
 #include <string>
 #include <memory>
-#include <regex>
 #include "GemController.h"
 
 namespace GemTracker {
@@ -38,7 +37,7 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
     auto it = std::find_if(routes.begin(), routes.end(),
                              [request](const Route& route) -> bool {
         return std::regex_search(request.headers.at("location"),
-                                 std::regex(route.location));
+                                 route.location);
     });
     if (it != routes.end()) {
         auto route = *it;
