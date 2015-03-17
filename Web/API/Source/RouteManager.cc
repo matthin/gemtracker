@@ -34,18 +34,18 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
 
 void RouteManager::routeRequest(sf::TcpSocket* client,
                                 const Http::Request& request) noexcept {
-    auto it = std::find_if(routes.begin(), routes.end(),
+    const auto it = std::find_if(routes.begin(), routes.end(),
                              [request](const Route& route) -> bool {
         return std::regex_search(request.headers.at("location"),
                                  route.location);
     });
     if (it != routes.end()) {
-        auto route = *it;
+        const auto route = *it;
  
         std::unique_ptr<Http::Response> response(new Http::Response);
         route.handler(request, response.get());
 
-        auto responseString = response->asString();
+        const auto responseString = response->asString();
         client->send(responseString.c_str(), responseString.size());
         client->disconnect();
     }
