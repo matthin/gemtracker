@@ -36,8 +36,8 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
                                 const Http::Request& request) noexcept {
     const auto it = std::find_if(routes.begin(), routes.end(),
                              [request](const Route& route) -> bool {
-        return std::regex_search(request.headers.at("location"),
-                                 route.location);
+        return route.isMatch(request.headers.at("method"),
+                             request.headers.at("location"));
     });
     if (it != routes.end()) {
         const auto route = *it;
@@ -53,8 +53,8 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
 
 std::vector<RouteManager::Route> RouteManager::initRoutes() noexcept {
     return std::vector<Route> {{
-        {Route("^/gems/index.json$", GemController::index)},
-        {Route("^/gem/[0-9]+/show.json$", GemController::show)}
+        {Route(Route::Get, "^/gems/index.json$", GemController::index)},
+        {Route(Route::Get, "^/gem/[0-9]+/show.json$", GemController::show)}
     }};
 }
 
