@@ -1,3 +1,5 @@
 build/
+doxygen/
 *.swp
+Doxyfile~
 
