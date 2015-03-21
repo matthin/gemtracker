@@ -13,7 +13,7 @@ RouteManager::RouteManager() : routes(initRoutes()) {
         std::unique_ptr<sf::TcpSocket> client(new sf::TcpSocket);
         listener.accept(*client);
         routeRequest(client.get(), getRequest(client.get()));
-        // Only serve one request before cloesing, just for testing.
+        // Only serve one request before closing, just for testing.
         break;
     }
 }
