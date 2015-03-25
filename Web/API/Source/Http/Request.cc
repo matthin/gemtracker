@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <vector>
+#include <Route.h>
 
 namespace GemTracker {
 namespace Http {
@@ -36,6 +37,19 @@ void Request::parse_headers(const std::string& headers_string) {
             const auto& value = header.substr(split_pos);
             // Cutoff leading splitting key and space
             headers[key] = value.substr(2);
+        }
+    }
+}
+
+void Request::createParams(Route* route) {
+    for (const auto param : route->params) {
+        auto nextSlashPosition = headers["location"]
+                                .find('/', param.startPosition);
+        if (nextSlashPosition != std::string::npos) {
+            auto length = nextSlashPosition - param.startPosition + 1;
+            auto content = headers["location"].substr(param.startPosition -1,
+                                                      length);
+            params[param.name] = content;
         }
     }
 }

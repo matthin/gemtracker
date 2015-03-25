@@ -12,14 +12,12 @@ public:
     RouteManager();
 
 private:
-    sf::TcpListener listener;
-
     Http::Request getRequest(sf::TcpSocket* client);
  
     const std::vector<Route> routes;
 
     inline void routeRequest(
-        sf::TcpSocket* client, const Http::Request& request
+        sf::TcpSocket* client, Http::Request* request
     ) noexcept;
     static inline std::vector<Route> initRoutes() noexcept;
 };

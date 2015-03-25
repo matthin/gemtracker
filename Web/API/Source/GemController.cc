@@ -34,8 +34,7 @@ void GemController::show(const Http::Request& request,
     SQLite::Statement query(
         db, "SELECT downloads, date FROM daily WHERE gem = ?"
     );
-    // Gem ID is hardcoded in.
-    query.bind(1, 1);
+    query.bind(1, request.getParams().at("id"));
 
     Json::Value root;
     while (query.executeStep()) {

@@ -8,11 +8,15 @@
 namespace GemTracker {
 
 RouteManager::RouteManager() : routes(initRoutes()) {
+    sf::TcpListener listener;
     listener.listen(8080);
     while (true) {
         std::unique_ptr<sf::TcpSocket> client(new sf::TcpSocket);
         listener.accept(*client);
-        routeRequest(client.get(), getRequest(client.get()));
+
+        auto request = getRequest(client.get());
+        routeRequest(client.get(), &request);
+
         // Only serve one request before closing, just for testing.
         break;
     }
@@ -33,28 +37,31 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
 }
 
 void RouteManager::routeRequest(sf::TcpSocket* client,
-                                const Http::Request& request) noexcept {
+                                Http::Request* request) noexcept {
     const auto it = std::find_if(routes.begin(), routes.end(),
-                             [request](const Route& route) -> bool {
-        return route.isMatch(request.headers.at("method"),
-                             request.headers.at("location"));
+                                [request](const Route& route) -> bool {
+        return route.isMatch(request->headers.at("method"),
+                             request->headers.at("location"));
     });
     if (it != routes.end()) {
-        const auto route = *it;
+        auto route = *it;
+
+        request->setRoute(&route);
  
         std::unique_ptr<Http::Response> response(new Http::Response);
-        route.handler(request, response.get());
+        route.handler(*request, response.get());
 
         const auto responseString = response->asString();
         client->send(responseString.c_str(), responseString.size());
-        client->disconnect();
     }
+
+    client->disconnect();
 }
 
 std::vector<Route> RouteManager::initRoutes() noexcept {
     return std::vector<Route> {{
         {Route(Route::Get, "^/gems/index.json$", GemController::index)},
-        {Route(Route::Get, "^/gem/[0-9]+/show.json$", GemController::show)}
+        {Route(Route::Get, "^/gem/:id/show.json$", GemController::show)}
     }};
 }
 
