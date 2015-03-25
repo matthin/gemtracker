@@ -16,9 +16,6 @@ Router::Router() : routes(initRoutes()) {
 
         auto request = getRequest(client.get());
         routeRequest(client.get(), &request);
-
-        // Only serve one request before closing, just for testing.
-        break;
     }
 }
 
