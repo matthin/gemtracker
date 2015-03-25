@@ -1,6 +1,6 @@
-#include "RouteManager.h"
+#include "Router.h"
 
 int main() {
-    GemTracker::RouteManager routeManager;
+    GemTracker::Router router;
 }
 

@@ -1,4 +1,4 @@
-#include "RouteManager.h"
+#include "Router.h"
 
 #include <algorithm>
 #include <string>
@@ -7,7 +7,7 @@
 
 namespace GemTracker {
 
-RouteManager::RouteManager() : routes(initRoutes()) {
+Router::Router() : routes(initRoutes()) {
     sf::TcpListener listener;
     listener.listen(8080);
     while (true) {
@@ -22,7 +22,7 @@ RouteManager::RouteManager() : routes(initRoutes()) {
     }
 }
 
-Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
+Http::Request Router::getRequest(sf::TcpSocket* client) {
     std::string message;
     while (true) {
         char buffer[1024];
@@ -36,7 +36,7 @@ Http::Request RouteManager::getRequest(sf::TcpSocket* client) {
     return Http::Request(message);
 }
 
-void RouteManager::routeRequest(sf::TcpSocket* client,
+void Router::routeRequest(sf::TcpSocket* client,
                                 Http::Request* request) noexcept {
     const auto it = std::find_if(routes.begin(), routes.end(),
                                 [request](const Route& route) -> bool {
@@ -58,7 +58,7 @@ void RouteManager::routeRequest(sf::TcpSocket* client,
     client->disconnect();
 }
 
-std::vector<Route> RouteManager::initRoutes() noexcept {
+std::vector<Route> Router::initRoutes() noexcept {
     return std::vector<Route> {{
         {Route(Route::Get, "^/gems/index.json$", GemController::index)},
         {Route(Route::Get, "^/gem/:id/show.json$", GemController::show)}

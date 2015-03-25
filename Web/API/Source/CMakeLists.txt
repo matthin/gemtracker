@@ -4,7 +4,7 @@ set(SourceFiles
     ${CMAKE_CURRENT_SOURCE_DIR}/GemController.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/jsoncpp.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Route.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/RouteManager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Router.cc
     PARENT_SCOPE
 )
 

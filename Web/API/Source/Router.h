@@ -7,9 +7,9 @@
 
 namespace GemTracker {
 
-class RouteManager {
+class Router {
 public:
-    RouteManager();
+    Router();
 
 private:
     Http::Request getRequest(sf::TcpSocket* client);
