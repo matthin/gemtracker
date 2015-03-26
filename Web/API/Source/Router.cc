@@ -48,6 +48,9 @@ void Router::routeRequest(sf::TcpSocket* client,
         std::unique_ptr<Http::Response> response(new Http::Response);
         route.handler(*request, response.get());
 
+        // Enable CORS for every domain.
+        response->headers["Access-Control-Allow-Origin"] = "*";
+
         const auto responseString = response->asString();
         client->send(responseString.c_str(), responseString.size());
     }
