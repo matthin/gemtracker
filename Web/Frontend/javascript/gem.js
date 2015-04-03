@@ -1,29 +1,35 @@
 (function() {
+    const gemID = getQueryParams()["id"];
+
     var request = new XMLHttpRequest();
-    request.open("GET", "http://127.0.0.1:8080/gem/1/show.json");
+    request.open("GET", "http://127.0.0.1:8080/gem/" + gemID + "/show.json");
     request.send();
     request.onload = function(e) {
         const dailies = JSON.parse(request.responseText);
-        displayDailies(dailies); 
+        displayDailiesGraph(dailies);
     }
 
-    function displayDailies(dailies) {
-        const table = document.getElementById("dailies");
-        var body = table.getElementsByTagName("tbody")[0];
+    function displayDailiesGraph(dailies) {
+        var data = {
+            labels: [],
+            datasets: [{
+                label: "example",
+                fillColor: "rgba(220,220,220,0.2)",
+                strokeColor: "rgba(220,220,220,1)",
+                pointColor: "rgba(220,220,220,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(220,220,220,1)",
+                data: []
+            }]
+        };
         dailies.forEach(function (daily) {
-            var dailyRow = document.createElement("tr");
-            body.appendChild(dailyRow);
-
-            var downloadsElement = document.createElement("td");
-            body.appendChild(downloadsElement);
-            downloadsElement.innerHTML = daily.downloads;
-
-            var dateElement = document.createElement("td");
-            body.appendChild(dateElement);
-            dateElement.innerHTML = daily.date;
+            data.labels.push(daily.date);
+            data.datasets[0].data.push(daily.downloads);
         });
 
-        console.log(getQueryParams());
+        const ctx = document.getElementById("dailiesChart").getContext("2d");
+        const dailiesChart = new Chart(ctx).Line(data);
     }
 
     function getQueryParams() {
@@ -39,16 +45,16 @@
         var startPosition = 0;
         while (moreParamsExist) {
             var nextAmpersand = rawParams.indexOf("&", startPosition);
-            
+
             if (nextAmpersand === -1) {
                 nextAmpersand = rawParams.length;
                 moreParamsExist = false;
             }
-        
+
             const rawParam = rawParams.substring(startPosition, nextAmpersand);
             const result = rawParam.split("=");
             params[result[0]] = result[1];
-            
+
             startPosition = nextAmpersand + 1;
         }
 
