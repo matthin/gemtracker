@@ -8,10 +8,10 @@
 namespace GemTracker {
 
 void GemController::index(const Http::Request& request,
-                                Http::Response* response) {
-    response->headers["Content-Type"] = "application/json";
-    response->code = 200;
-    response->codeMessage = "OK";
+                                rokunet::Http::Response::Builder* response) {
+    response->setHeaders({{"Content-Type", "application/json"}})
+            .setCode(200)
+            .setCodeMessage("OK");
 
     SQLite::Database db("GemTracker.sqlite3", SQLITE_OPEN_READWRITE);
     SQLite::Statement query(db, "SELECT id, name FROM gem");
@@ -23,20 +23,21 @@ void GemController::index(const Http::Request& request,
         entry["name"] = query.getColumn(1).getText();
         root.append(entry);
     }
-    response->setMessage(root.toStyledString());
+    response->setBody(root.toStyledString());
 }
 
 void GemController::show(const Http::Request& request,
-                               Http::Response* response) {
-    response->headers["Content-Type"] = "application/json";
-    response->code = 200;
-    response->codeMessage = "OK";
+                               rokunet::Http::Response::Builder* response) {
+    response->setHeaders({{"Content-Type", "application/json"}})
+            .setCode(200)
+            .setCodeMessage("OK");
 
     SQLite::Database db("GemTracker.sqlite3", SQLITE_OPEN_READWRITE);
 
     SQLite::Statement query(
         db, "SELECT downloads, date FROM daily WHERE gem = ?"
     );
+
     query.bind(1, request.getParams().at("id"));
 
     Json::Value root;
@@ -46,7 +47,7 @@ void GemController::show(const Http::Request& request,
         entry["date"] = query.getColumn(1).getText();
         root.append(entry);
     }
-    response->setMessage(root.toStyledString());
+    response->setBody(root.toStyledString());
 }
 
 } // namespace GemTracker

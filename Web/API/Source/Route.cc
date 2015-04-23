@@ -2,23 +2,13 @@
 
 namespace GemTracker {
 
-Route::Route(const Method method, const std::string location,
+Route::Route(const rokunet::Http::Request::Method method,
+             const std::string location,
              const Handler handler)
         : method(method), location(toRegex(location)),
         handler(handler), params(initParams(location)) {}
 
-bool Route::isMatch(const std::string& methodString,
-                    const std::string& location) const noexcept {
-    Method method;
-    if (methodString == "GET") {
-        method = Get;
-    } else if (methodString == "POST") {
-        method = Post;
-    }
-    return isMatch(method, location);
-}
-
-bool Route::isMatch(const Method method,
+bool Route::isMatch(const rokunet::Http::Request::Method method,
                     const std::string& location) const noexcept {
     if (this->method == method &&
             std::regex_search(location, this->location)) {

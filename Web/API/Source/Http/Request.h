@@ -1,7 +1,11 @@
 #pragma once
 
+#include <rokunet/Http/Request.h>
+
 #include <string>
 #include <unordered_map>
+
+#include <iostream>
 
 namespace GemTracker {
 
@@ -12,10 +16,21 @@ class Route;
 
 namespace Http {
 
-class Request {
+class Request : public rokunet::Http::Request {
 public:
-    Request(const std::string& headersString);
-    std::unordered_map<std::string, std::string> headers;
+    class Factory;
+
+    /**
+     * Needs to exist for overriden factory;
+     */
+    Request(
+        std::string body,
+        std::unordered_map<std::string, std::string> headers,
+        std::string host,
+        std::string location,
+        Method method,
+        rokunet::Http::Version version
+    );
 
     /**
      * Setter for route.
@@ -33,10 +48,19 @@ public:
     }
 
 private:
-    inline void parse_headers(const std::string& headers_string);
     void createParams(Route* route);
 
     std::unordered_map<std::string, std::string> params;
+};
+
+class Request::Factory : public rokunet::Http::Request::Factory {
+public:
+    // Not calling parent constructor.
+    using rokunet::Http::Request::Factory::Factory;
+
+    Request build() const {
+        return Request(body, headers, host, location, method, *version);
+    }
 };
 
 } // namespace Http

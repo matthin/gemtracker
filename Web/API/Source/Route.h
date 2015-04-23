@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Http/Response.h"
+#include <rokunet/Http/Response.h>
 #include "Http/Request.h"
 #include <functional>
 #include <regex>
@@ -24,24 +24,21 @@ private:
     };
 
 public:
-    enum Method {
-        Get, Post
-    };
-
     typedef std::function<void(const Http::Request& request,
-                               Http::Response* response)> Handler;
+                               rokunet::Http::Response::Builder* response)> Handler;
 
-    Route(Method method, std::string location, Handler handler);
+    Route(
+        rokunet::Http::Request::Method method,
+        std::string location,
+        Handler handler
+    );
 
     const std::vector<URLParameter> params;
-    const Method method;
+    const rokunet::Http::Request::Method method;
     const std::regex location;
     const Handler handler;
 
-    bool isMatch(const std::string& methodString,
-                 const std::string& location) const noexcept;
-
-    bool isMatch(const Method method,
+    bool isMatch(const rokunet::Http::Request::Method method,
                  const std::string& location) const noexcept;
 
 private:
